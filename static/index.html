@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="tailwind_3_4_0.js"></script>
+    <script src="htmx_1_9_10.js"></script>
+    <title>The CLTH-N stack</title>
+</head>
+<body class="flex flex-col bg-gray-700 text-slate-100 items-center justify-center h-screen">
+    <div class="my-8 text-center">
+        <h1 class="text-xl font-bold">The CLTH-N Stack</h1>
+    </div>
+    <ul class="space-y-4">
+        <li><strong>C</strong> stands for <a href="https://en.wikipedia.org/wiki/C_(programming_language)">C Programming Laguage</a></li>
+        <li><strong>L</strong> stands for <a href="https://libevent.org/">libevent</a> as the HTTP library</li>
+        <li><strong>T</strong> stands for <a href="https://tailwindcss.com/">Tailwind CSS</a> as the CSS framework</li>
+        <li><strong>H</strong> stands for <a href="https://htmx.org/">HTMX</a> as the server-side UI library</li>
+        <li><strong>N</strong> stands for <a href="https://www.nginx.com/">NGINX</a> as the static content server</li>
+        <li class="text-center italic"> ... you can choose the database  </div></li>
+    </ul>
+    <div class="w-64 my-8 px-4 h-24 bg-slate-900 rounded-md flex items-center justify-center">
+        <div hx-get="/index/view_question" hx-trigger="load" hx-swap="outerHTML"></div>
+    </div>
+
+    <div class="flex flex-col  space-y-4 items-center justify-center">
+        <div class="bg-slate-800 min-h-24 w-64 rounded-md flex items-center justify-center">
+            <div id="parsed-div">
+            </div>
+        </div>
+        <textarea id="data" class="text-black" placeholder="key=value&data=store"></textarea>
+
+        <div class="my-8 px-4 bg-slate-900 rounded-md flex items-center justify-center">
+            <button id="btn-parse" hx-get="/index/view_parse?" hx-swap="innerHTML" hx-target="#parsed-div">
+                Click to parse query on server
+            </button>
+        </div>
+    </div>
+</body>
+<script>
+
+document.getElementById("btn-parse").addEventListener('htmx:configRequest', (event) => {
+   event.detail.path = event.detail.path + document.getElementById("data").value;
+});
+
+</script>
+
+</html>
