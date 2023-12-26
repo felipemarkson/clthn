@@ -1,15 +1,34 @@
 CFLAGS = -Wall -Wextra -Werror
 
-debug: CFLAGS += -O0 -ggdb
+.PHONY: debug release build clean main controller index api httpserver
+
+debug: CFLAGS += -O0 -ggdb -DDEBUG
 debug: build
 
 release: CFLAGS += -O3
 release: build
 	strip main
 
-build: main.o controller.o httpserver.o
-	cc main.o controller.o httpserver.o -o main -levent
+build: main controller httpserver
+	cc *.o -o main -levent
 
+clean:
+	rm -f *.o
+	rm -f main
+
+# Modules
+main: main.o
+
+controller: index api controller.o utils.o 
+
+index: index.o utils.o
+
+api: api.o utils.o
+
+httpserver: httpserver.o
+
+
+# Translation units
 main.o:
 	cc $(CFLAGS) -c src/main.c
 
@@ -19,6 +38,11 @@ controller.o:
 httpserver.o:
 	cc $(CFLAGS) -c src/httpserver/httpserver.c
 
-clean:
-	rm -f *.o
-	rm -f main
+api.o:
+	cc $(CFLAGS) -c src/controller/api/api.c
+
+index.o:
+	cc $(CFLAGS) -c src/controller/index/index.c
+
+utils.o:
+	cc $(CFLAGS) -c src/controller/utils.c
